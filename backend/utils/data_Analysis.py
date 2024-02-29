@@ -25,10 +25,11 @@ def moving_average_convergence_divergence(df, shortTermInterval=12, longTermInte
     df['Signal_Line'] = df['MACD'].ewm(span=signLineInterval, adjust=False).mean()
     return df
     
-def std_upper_lower_bound(df, timeInterval=20):
-    df['{}STD'.format(timeInterval)] = df['Adj Close'].rolling(window=timeInterval).std()
-    df['{}Upper'.format(timeInterval)] = df['Adj Close'].rolling(window=timeInterval).mean() + (df['{}STD'.format(timeInterval)] * 2)
-    df['{}Lower'.format(timeInterval)] = df['Adj Close'].rolling(window=timeInterval).mean() - (df['{}STD'.format(timeInterval)] * 2)
+def bollinger_bands(df, timeInterval=20, num_of_std=2):
+    df['MA_{}'.format(timeInterval)] = df['Adj Close'].rolling(window=timeInterval).mean()
+    df['STD_{}'.format(timeInterval)] = df['Adj Close'].rolling(window=timeInterval).std() 
+    df['Upper_{}'.format(timeInterval)] = df['MA'] + (df['STD'] * num_of_std)
+    df['Lower_{}'.format(timeInterval)] = df['MA'] - (df['STD'] * num_of_std)
     return df
     
 def parabolic_SAR(df, acceleration=0.02, maximum=0.2):
@@ -46,66 +47,90 @@ def stochastic_oscillator(df, fastk_period=14, slowk_period=3, slowk_matype=0, s
     return df
     
 def fibonacci_level(df, fib_levels=[0, 0.236, 0.382, 0.618, 0.786, 1]):
-    # Calculate the price for each Fibonacci Level
     peak_price = df['High'].max()
     trough_price = df['Low'].min()
     price_range = peak_price - trough_price
     for level in fib_levels:
         df[f'Fib_{int(level*100)}%'] = trough_price + (price_range * level)
     return df
+
+def on_balance_volume(df, diff=1):
+    df['Volume_diff'] = df['Volume'].diff(diff)
+    df['OBV'] = (np.where(df['Adj Close'] > df['Adj Close'].shift(diff), df['Volume'], 
+              np.where(df['Adj Close'] < df['Adj Close'].shift(diff), -df['Volume'], 0))).cumsum()
+    return df
+
+def momentum(df, timeInterval=14):
+    df['Momentum'] = df['Adj Close'].diff(timeInterval)
+    return df
+
+def average_true_range(df, timeInterval=14):
+    high_low = df['High'] - df['Low']
+    high_close = np.abs(df['High'] - df['Adj Close'].shift())
+    low_close = np.abs(df['Low'] - df['Adj Close'].shift())
+    ranges = pd.concat([high_low, high_close, low_close], axis=1)
+    true_range = np.max(ranges, axis=1)
+    df['ATR'] = true_range.rolling(window=timeInterval).mean()
+    return df
+
+def ichimoku_cloud(df):
+    high_9 = df['High'].rolling(window=9).max()
+    low_9 = df['Low'].rolling(window=9).min()
+    df['Tenkan_sen'] = (high_9 + low_9) / 2
+
+    high_26 = df['High'].rolling(window=26).max()
+    low_26 = df['Low'].rolling(window=26).min()
+    df['Kijun_sen'] = (high_26 + low_26) / 2
+
+    df['Senkou_span_A'] = ((df['Tenkan_sen'] + df['Kijun_sen']) / 2).shift(26)
+
+    high_52 = df['High'].rolling(window=52).max()
+    low_52 = df['Low'].rolling(window=52).min()
+    df['Senkou_span_B'] = ((high_52 + low_52) / 2).shift(26)
+
+    df['Chikou_span'] = df['Adj Close'].shift(-26)
+    return df
+
+def williams_r(df, timeInterval=14):
+    highest_high = df['High'].rolling(window=timeInterval).max()
+    lowest_low = df['Low'].rolling(window=timeInterval).min()
+    df['Williams_%R'] = ((highest_high - df['Adj Close']) / (highest_high - lowest_low)) * -100
+    return df
     
-
-
 def technical_indictors_calculation(df):
     # Calculate the 20-day Simple Moving Average (SMA)
-    df['SMA_20'] = df['Adj Close'].rolling(window=20).mean()
+    simple_moving_average(df)
     
     # Calculate the 50-day Simple Moving Average (SMA)
-    df['SMA_50'] = df['Adj Close'].rolling(window=50).mean()
+    simple_moving_average(df, 50)
     
     # Calculate the 20-day Exponential Moving Average (EMA)
-    df['EMA_20'] = df['Adj Close'].ewm(span=20, adjust=False).mean()
+    exponential_moving_average(df)
     
     # Calculate the 50-day Exponential Moving Average (EMA)
-    df['EMA_50'] = df['Adj Close'].ewm(span=50, adjust=False).mean()
+    exponential_moving_average(df, 50)
     
     # Calculate the Relative Strength Index (RSI)
-    delta = df['Adj Close'].diff(1)
-    gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
-    loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
-    rs = gain / loss
-    df['RSI'] = 100 - (100 / (1 + rs))
+    rsi(df)
     
     # Short term Exponential Moving Average
-    ShortEMA = df['Adj Close'].ewm(span=12, adjust=False).mean()
     # Long term Exponential Moving Average
-    LongEMA = df['Adj Close'].ewm(span=26, adjust=False).mean()
     # Calculate the Moving Average Convergence Divergence (MACD)
-    df['MACD'] = ShortEMA - LongEMA
-    df['Signal_Line'] = df['MACD'].ewm(span=9, adjust=False).mean()
+    moving_average_convergence_divergence(df)
     
     # Calculate the Std Deviation, Upper Band and Lower Band
-    df['20STD'] = df['Adj Close'].rolling(window=20).std()
-    df['Upper'] = df['SMA_20'] + (df['20STD'] * 2)
-    df['Lower'] = df['SMA_20'] - (df['20STD'] * 2)
+    bollinger_bands(df)
     
     # Calculate the Parabolic SAR (Stop and Reverse)
-    df['SAR'] = talib.SAR(df['High'], df['Low'], acceleration=0.02, maximum=0.2)
+    parabolic_SAR(df)
     
     # Calculate the Average Directional Movement Index (ADX)
-    df['ADX'] = talib.ADX(df['High'], df['Low'], df['Close'], timeperiod=14)
+    average_directional_movement_index(df)
     
     # Calculate the Stochastic Oscillator
-    df['SlowK'], df['SlowD'] = talib.STOCH(df['High'], df['Low'], df['Close'],
-                           fastk_period=14, slowk_period=3, slowk_matype=0,
-                           slowd_period=3, slowd_matype=0)
+    stochastic_oscillator(df)
     
     # Calculate the price for each Fibonacci Level
-    peak_price = df['High'].max()
-    trough_price = df['Low'].min()
-    price_range = peak_price - trough_price
-    fib_levels = [0, 0.236, 0.382, 0.618, 0.786, 1]
-    for level in fib_levels:
-        df[f'Fib_{int(level*100)}%'] = trough_price + (price_range * level)
+    # fibonacci_level(df)
     
     return(df)
