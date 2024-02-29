@@ -28,8 +28,8 @@ def moving_average_convergence_divergence(df, shortTermInterval=12, longTermInte
 def bollinger_bands(df, timeInterval=20, num_of_std=2):
     df['MA_{}'.format(timeInterval)] = df['Adj Close'].rolling(window=timeInterval).mean()
     df['STD_{}'.format(timeInterval)] = df['Adj Close'].rolling(window=timeInterval).std() 
-    df['Upper_{}'.format(timeInterval)] = df['MA'] + (df['STD'] * num_of_std)
-    df['Lower_{}'.format(timeInterval)] = df['MA'] - (df['STD'] * num_of_std)
+    df['Upper_{}'.format(timeInterval)] = df['MA_{}'.format(timeInterval)] + (df['STD_{}'.format(timeInterval)] * num_of_std)
+    df['Lower_{}'.format(timeInterval)] = df['MA_{}'.format(timeInterval)] - (df['STD_{}'.format(timeInterval)] * num_of_std)
     return df
     
 def parabolic_SAR(df, acceleration=0.02, maximum=0.2):
