@@ -2,7 +2,7 @@
 import plotly.express as px
 import plotly.graph_objects as go
 import os
-from utils.data_Analysis import *
+from utils.data_analysis import *
 from utils.data_fetcher import *
 
 def plot_data(df):
