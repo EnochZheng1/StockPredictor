@@ -63,3 +63,31 @@ class linear_regression:
         r2 = r2_score(self.y_test, predictions)
         print(f"Mean Squared Error: {mse}")
         print(f"R-squared: {r2}")
+
+    def predict_future(self, last_known_data, steps=10):
+        """
+        Predict future values based on the last known data and for a specified number of steps ahead.
+        
+        Parameters:
+        - last_known_data: A numpy array or a pandas DataFrame with the last known data points.
+        - steps: Number of future steps to predict.
+        
+        Returns:
+        - A list of predicted values for the future steps.
+        """
+        future_predictions = []
+        current_step_data = last_known_data.copy()
+        
+        for _ in range(steps):
+            # Assuming the time feature is the last column in your dataset
+            # Increment the time feature for the next prediction
+            current_step_data[:, -1] += 1  # This line assumes your time feature is numeric and can be simply incremented
+            
+            # Predict the next step and append to future_predictions
+            next_step_prediction = self.model.predict(current_step_data.reshape(1, -1))
+            future_predictions.append(next_step_prediction.item())
+            
+            # Update current_step_data with the predicted value (if necessary)
+            # This line is optional and depends on whether your future predictions rely on previous predictions
+            
+        return future_predictions
