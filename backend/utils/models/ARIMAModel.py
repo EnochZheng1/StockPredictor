@@ -4,6 +4,7 @@ from sklearn.metrics import mean_squared_error
 from math import sqrt
 
 class ARIMAModel:
+    
     def __init__(self, order):
         """
         Initialize the ARIMA model with a specific order.
@@ -59,3 +60,21 @@ class ARIMAModel:
         mse = mean_squared_error(actual, predictions)
         rmse = sqrt(mse)
         print(f"Root Mean Squared Error: {rmse}")
+
+    def forecast(self, steps=10):
+        """
+        Forecast future values using the fitted ARIMA model.
+        
+        Parameters:
+        - steps: Number of future time steps to forecast.
+        
+        Returns:
+        - Forecasted values for the specified number of steps ahead.
+        """
+        # Assuming the series was provided to the model in a way that the last index can be inferred
+        end_of_series = len(self.model_fit.data.endog) - 1
+        start = end_of_series + 1
+        end = end_of_series + steps
+
+        forecasted_values = self.predict(start=start, end=end)
+        return forcasted_values
