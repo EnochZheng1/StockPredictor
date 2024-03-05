@@ -74,12 +74,46 @@ class LongShortTermMemory:
             labels.append(label)
         return np.array(sequences), np.array(labels)
 
+    def predict_next_n_days(self, recent_data, n=10):
+        predictions = []
+        current_input = recent_data[-self.sequence_length:].copy()
+        
+        for _ in range(n):
+            # Scale the current input
+            scaled_current_input = self.scaler.transform(current_input)
+            input_seq_tensor = torch.tensor(scaled_current_input, dtype=torch.float32).unsqueeze(0)
+            
+            # Predict the next day and scale back the prediction
+            self.model.eval()
+            with torch.no_grad():
+                self.model.hidden = (torch.zeros(self.num_layers, 1, self.hidden_layer_size),
+                                     torch.zeros(self.num_layers, 1, self.hidden_layer_size))
+                prediction = self.forward(input_seq_tensor)
+                predicted_price = self.scaler.inverse_transform(prediction.numpy().reshape(-1, 1))
+                
+            predictions.append(predicted_price.item())
+            
+            # Append the prediction to current_input and remove the first element
+            # to maintain the sequence length
+            next_day_input = np.array([predicted_price.item()])  # Assume single feature for simplicity
+            current_input = np.vstack((current_input[1:], next_day_input))
+        
+        return predictions
+
 # Example usage:
 # Assuming your data is loaded into a DataFrame `df` with columns ['Price', 'Indicator1', ...]
 # input_size = number of features (e.g., if you have 'Price' and 'Indicator1', input_size=2)
 # sequence_length = number of time steps to look back
 
-# predictor = StockPredictor(input_size=2, hidden_layer_size=128, sequence_length=10, num_layers=2)
+# predictor = LongShortTermMemory(input_size=2, hidden_layer_size=128, sequence_length=10, num_layers=2)
 # predictor.train_model(train_data=df[['Price', 'Indicator1']].values, epochs=150, lr=0.001)
 # future_price = predictor.predict(recent_data=df[['Price', 'Indicator1']].values[-10:])
 # print(f"Predicted future price: {future_price}")
+
+# Assuming your recent_data is loaded and formatted correctly, e.g., as a NumPy array
+# recent_data = df[['Price', 'Indicator1']].values  # Just an example
+
+# Assuming you've already instantiated and trained a StockPredictor object named `predictor`
+# next_10_days_predictions = predictor.predict_next_n_days(recent_data, n=10)
+
+# print("Predictions for the next 10 days:", next_10_days_predictions)
