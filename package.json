@@ -1,0 +1,15 @@
+{
+  "name": "stock-predictor",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "concurrently --names backend,frontend --prefix-colors blue,green \"npm run start:backend\" \"npm run start:frontend\"",
+    "start:backend": "cd backend && uvicorn app:app --reload --port 4289",
+    "start:frontend": "cd frontend && npm run dev",
+    "install:frontend": "cd frontend && npm install",
+    "build:frontend": "cd frontend && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

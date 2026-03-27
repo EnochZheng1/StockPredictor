@@ -1,0 +1,14 @@
+yfinance
+pandas
+numpy
+scikit-learn
+statsmodels
+torch
+TA-Lib
+plotly
+fastapi
+uvicorn[standard]
+pydantic
+xgboost
+prophet
+python-multipart

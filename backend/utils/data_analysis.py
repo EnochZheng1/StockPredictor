@@ -136,8 +136,20 @@ def technical_indictors_calculation(df):
     
     # Calculate the Stochastic Oscillator
     stochastic_oscillator(df)
-    
-    # Calculate the price for each Fibonacci Level
-    # fibonacci_level(df)
-    
+
+    # Calculate On-Balance Volume
+    on_balance_volume(df)
+
+    # Calculate Momentum
+    momentum(df)
+
+    # Calculate Average True Range
+    average_true_range(df)
+
+    # Calculate Ichimoku Cloud
+    ichimoku_cloud(df)
+
+    # Calculate Williams %R
+    williams_r(df)
+
     return(df)

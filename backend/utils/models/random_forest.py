@@ -1,16 +1,20 @@
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
 from utils.models.base_model import BaseModel
 
 
-class LinearRegressionModel(BaseModel):
+class RandomForestModel(BaseModel):
 
-    def __init__(self):
-        self.model = LinearRegression()
+    def __init__(self, n_estimators=100, random_state=42):
+        self.model = RandomForestRegressor(
+            n_estimators=n_estimators,
+            random_state=random_state,
+            n_jobs=-1,
+        )
 
     def get_name(self) -> str:
-        return "Linear Regression"
+        return "Random Forest"
 
     def train(self, X: pd.DataFrame, y: pd.Series) -> None:
         self.model.fit(X, y)
@@ -25,7 +29,5 @@ class LinearRegressionModel(BaseModel):
         for _ in range(steps):
             pred = self.model.predict(current)[0]
             predictions.append(float(pred))
-            # Shift features forward: use prediction as a simple proxy
-            current = current.copy()
 
         return predictions

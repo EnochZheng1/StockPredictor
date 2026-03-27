@@ -1,16 +1,22 @@
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LinearRegression
+from xgboost import XGBRegressor
 from utils.models.base_model import BaseModel
 
 
-class LinearRegressionModel(BaseModel):
+class XGBoostModel(BaseModel):
 
-    def __init__(self):
-        self.model = LinearRegression()
+    def __init__(self, n_estimators=100, learning_rate=0.1, max_depth=6, random_state=42):
+        self.model = XGBRegressor(
+            n_estimators=n_estimators,
+            learning_rate=learning_rate,
+            max_depth=max_depth,
+            random_state=random_state,
+            verbosity=0,
+        )
 
     def get_name(self) -> str:
-        return "Linear Regression"
+        return "XGBoost"
 
     def train(self, X: pd.DataFrame, y: pd.Series) -> None:
         self.model.fit(X, y)
@@ -25,7 +31,5 @@ class LinearRegressionModel(BaseModel):
         for _ in range(steps):
             pred = self.model.predict(current)[0]
             predictions.append(float(pred))
-            # Shift features forward: use prediction as a simple proxy
-            current = current.copy()
 
         return predictions
