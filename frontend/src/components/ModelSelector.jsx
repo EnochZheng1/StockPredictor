@@ -10,8 +10,15 @@ const MODEL_LABELS = {
   polynomial_regression: "Polynomial Regression",
 };
 
-export default function ModelSelector({ models, onRun, loading }) {
+const ENSEMBLE_LABELS = {
+  ensemble_average: "Simple Average",
+  ensemble_weighted: "Weighted Average (by RMSE)",
+  ensemble_stacking: "Stacking (Ridge)",
+};
+
+export default function ModelSelector({ models, ensembleMethods = [], onRun, loading }) {
   const [selected, setSelected] = useState([]);
+  const [selectedEnsembles, setSelectedEnsembles] = useState([]);
   const [steps, setSteps] = useState(30);
 
   const toggle = (model) => {
@@ -20,9 +27,17 @@ export default function ModelSelector({ models, onRun, loading }) {
     );
   };
 
+  const toggleEnsemble = (method) => {
+    setSelectedEnsembles((prev) =>
+      prev.includes(method) ? prev.filter((m) => m !== method) : [...prev, method]
+    );
+  };
+
   const selectAll = () => {
     setSelected(selected.length === models.length ? [] : [...models]);
   };
+
+  const ensemblesDisabled = selected.length < 2;
 
   return (
     <div className="model-selector">
@@ -47,6 +62,29 @@ export default function ModelSelector({ models, onRun, loading }) {
           </label>
         ))}
       </div>
+
+      {ensembleMethods.length > 0 && (
+        <div className="ensemble-section">
+          <h4>Ensemble Methods</h4>
+          {ensemblesDisabled && (
+            <p className="ensemble-disabled-note">Select at least 2 models to enable ensembles</p>
+          )}
+          <div className="model-checkboxes">
+            {ensembleMethods.map((method) => (
+              <label key={method} className={ensemblesDisabled ? "disabled" : ""}>
+                <input
+                  type="checkbox"
+                  checked={selectedEnsembles.includes(method)}
+                  onChange={() => toggleEnsemble(method)}
+                  disabled={ensemblesDisabled}
+                />
+                {ENSEMBLE_LABELS[method] || method}
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="steps-input">
         <label>
           Forecast days:
@@ -60,7 +98,7 @@ export default function ModelSelector({ models, onRun, loading }) {
         </label>
       </div>
       <button
-        onClick={() => onRun(selected, steps)}
+        onClick={() => onRun(selected, steps, ensemblesDisabled ? [] : selectedEnsembles)}
         disabled={loading || selected.length === 0}
       >
         {loading ? "Running Models..." : "Run Comparison"}

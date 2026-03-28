@@ -17,7 +17,7 @@ export default function ComparisonTable({ summary, bestModel }) {
           {summary.map((row) => (
             <tr
               key={row.model_name}
-              className={row.model_name === bestModel ? "best-row" : ""}
+              className={`${row.model_name === bestModel ? "best-row" : ""} ${row.model_name.startsWith("Ensemble") ? "ensemble-row" : ""}`}
             >
               <td>
                 {row.model_name}

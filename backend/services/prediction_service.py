@@ -13,6 +13,7 @@ class PredictionResult:
     test_dates: List[str]
     future_predictions: List[float]
     future_dates: List[str]
+    model_key: str = ""
 
 
 def run_prediction(ticker: str, model_name: str, steps: int = 30) -> PredictionResult:

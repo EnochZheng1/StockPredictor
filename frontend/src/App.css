@@ -224,6 +224,39 @@ button:disabled {
   background: #f0fdf4;
 }
 
+/* Ensemble Styles */
+.ensemble-section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.ensemble-section h4 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  color: #475569;
+}
+
+.ensemble-disabled-note {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-style: italic;
+  margin: 0 0 8px;
+}
+
+.model-checkboxes label.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.comparison-table .ensemble-row {
+  background: #eff6ff;
+}
+
+.comparison-table .ensemble-row.best-row {
+  background: #dbeafe;
+}
+
 .best-badge {
   display: inline-block;
   margin-left: 8px;

@@ -13,6 +13,7 @@ def compare(request: ComparisonRequest):
             ticker=request.ticker,
             model_names=request.model_names,
             steps=request.steps,
+            ensemble_methods=request.ensemble_methods,
         )
         responses = []
         for r in result.results:

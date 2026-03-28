@@ -4,6 +4,7 @@ import numpy as np
 from utils.data_fetcher import get_historical_data
 from utils.data_analysis import technical_indictors_calculation
 from utils.models import list_models
+from services.ensemble_service import list_ensemble_methods
 from api.schemas import StockDataResponse
 
 router = APIRouter()
@@ -43,4 +44,4 @@ def get_stock_data(ticker: str):
 
 @router.get("/models")
 def get_available_models():
-    return {"models": list_models()}
+    return {"models": list_models(), "ensemble_methods": list_ensemble_methods()}

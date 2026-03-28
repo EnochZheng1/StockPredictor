@@ -12,6 +12,7 @@ class ComparisonRequest(BaseModel):
     ticker: str
     model_names: List[str]
     steps: int = 30
+    ensemble_methods: List[str] = []
 
 
 class MetricsResponse(BaseModel):

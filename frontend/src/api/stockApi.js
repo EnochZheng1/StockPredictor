@@ -11,7 +11,7 @@ export async function fetchStockData(ticker) {
 
 export async function getAvailableModels() {
   const { data } = await API.get("/models");
-  return data.models;
+  return { models: data.models, ensembleMethods: data.ensemble_methods || [] };
 }
 
 export async function runPrediction(ticker, modelName, steps = 30) {
@@ -23,11 +23,12 @@ export async function runPrediction(ticker, modelName, steps = 30) {
   return data;
 }
 
-export async function runComparison(ticker, modelNames, steps = 30) {
+export async function runComparison(ticker, modelNames, steps = 30, ensembleMethods = []) {
   const { data } = await API.post("/compare", {
     ticker,
     model_names: modelNames,
     steps,
+    ensemble_methods: ensembleMethods,
   });
   return data;
 }

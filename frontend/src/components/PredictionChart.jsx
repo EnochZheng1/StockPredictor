@@ -106,17 +106,21 @@ export default function PredictionChart({ stockData, comparisonResults }) {
               name="Actual"
             />
           )}
-          {modelNames.map((name, i) => (
-            <Line
-              key={name}
-              type="monotone"
-              dataKey={name}
-              stroke={COLORS[i % COLORS.length]}
-              strokeWidth={1.5}
-              dot={false}
-              name={name}
-            />
-          ))}
+          {modelNames.map((name, i) => {
+            const isEnsemble = name.startsWith("Ensemble");
+            return (
+              <Line
+                key={name}
+                type="monotone"
+                dataKey={name}
+                stroke={COLORS[i % COLORS.length]}
+                strokeWidth={isEnsemble ? 2.5 : 1.5}
+                strokeDasharray={isEnsemble ? "8 4" : undefined}
+                dot={false}
+                name={name}
+              />
+            );
+          })}
         </LineChart>
       </ResponsiveContainer>
     </div>
