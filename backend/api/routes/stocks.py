@@ -11,9 +11,9 @@ router = APIRouter()
 
 
 @router.get("/stocks/{ticker}", response_model=StockDataResponse)
-def get_stock_data(ticker: str):
+def get_stock_data(ticker: str, period: str = "5y"):
     try:
-        df = get_historical_data(ticker)
+        df = get_historical_data(ticker, period=period)
         df = technical_indictors_calculation(df)
 
         if "Date" not in df.columns and df.index.name == "Date":

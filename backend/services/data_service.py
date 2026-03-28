@@ -26,9 +26,9 @@ class DataBundle:
 NON_FEATURE_COLS = {"Date", "Adj Close", "Close", "Volume_diff", "Chikou_span"}
 
 
-def prepare_data(ticker: str, test_ratio: float = 0.2) -> DataBundle:
+def prepare_data(ticker: str, period: str = "5y", test_ratio: float = 0.2) -> DataBundle:
     """Fetch stock data, compute indicators, and split into train/test."""
-    df = get_historical_data(ticker)
+    df = get_historical_data(ticker, period=period)
 
     if df is None or df.empty:
         raise ValueError(f"No data returned for ticker '{ticker}'. Check that it is a valid symbol.")

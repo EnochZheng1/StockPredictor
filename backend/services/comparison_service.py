@@ -28,12 +28,13 @@ def run_comparison(
     ticker: str,
     model_names: List[str],
     steps: int = 30,
+    period: str = "5y",
     ensemble_methods: Optional[List[str]] = None,
 ) -> ComparisonResult:
     logger.info("Starting comparison for %s with models: %s", ticker, model_names)
     t0 = time.time()
 
-    data = prepare_data(ticker)
+    data = prepare_data(ticker, period=period)
     logger.info("Data prepared: %d train, %d test samples", len(data.X_train), len(data.X_test))
 
     results = []
@@ -53,6 +54,7 @@ def run_comparison(
             metrics = model.evaluate(data.X_test, data.y_test)
             test_preds = model.predict(data.X_test)
             future_preds = model.predict_future(data.X_test, steps=steps)
+            feat_imp = model.get_feature_importance(data.feature_columns)
 
             elapsed = time.time() - model_t0
             logger.info("Model %s completed in %.2fs (RMSE=%.4f)", name, elapsed, metrics["rmse"])
@@ -65,6 +67,7 @@ def run_comparison(
                 future_predictions=[float(p) for p in future_preds],
                 future_dates=future_date_strs,
                 model_key=name,
+                feature_importance=feat_imp,
             ))
         except Exception as e:
             logger.error("Model %s failed: %s", name, e)

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict
+from typing import Dict, Optional, List
 import pandas as pd
 import numpy as np
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
@@ -24,6 +24,10 @@ class BaseModel(ABC):
     @abstractmethod
     def predict_future(self, last_known_data: pd.DataFrame, steps: int = 30) -> list:
         pass
+
+    def get_feature_importance(self, feature_names: List[str]) -> Optional[Dict[str, float]]:
+        """Return feature importances as {name: score}. None if not supported."""
+        return None
 
     def evaluate(self, X_test: pd.DataFrame, y_test: pd.Series) -> Dict[str, float]:
         predictions = self.predict(X_test)

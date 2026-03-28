@@ -13,6 +13,7 @@ def compare(request: ComparisonRequest):
             ticker=request.ticker,
             model_names=request.model_names,
             steps=request.steps,
+            period=request.period,
             ensemble_methods=request.ensemble_methods,
         )
         responses = []
@@ -24,6 +25,7 @@ def compare(request: ComparisonRequest):
                 test_dates=r.test_dates,
                 future_predictions=r.future_predictions,
                 future_dates=r.future_dates,
+                feature_importance=r.feature_importance,
             ))
         return ComparisonResponse(
             results=responses,

@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from typing import Dict, Optional, List
 from sklearn.ensemble import RandomForestRegressor
 from utils.models.base_model import BaseModel
 
@@ -21,6 +22,10 @@ class RandomForestModel(BaseModel):
 
     def predict(self, X: pd.DataFrame) -> np.ndarray:
         return self.model.predict(X)
+
+    def get_feature_importance(self, feature_names: List[str]) -> Optional[Dict[str, float]]:
+        importances = self.model.feature_importances_
+        return dict(zip(feature_names, [float(v) for v in importances]))
 
     def predict_future(self, last_known_data: pd.DataFrame, steps: int = 30) -> list:
         predictions = []

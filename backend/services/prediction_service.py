@@ -1,5 +1,5 @@
-from typing import Dict, List
-from dataclasses import dataclass
+from typing import Dict, List, Optional
+from dataclasses import dataclass, field
 
 from utils.models import get_model
 from services.data_service import prepare_data
@@ -14,12 +14,13 @@ class PredictionResult:
     future_predictions: List[float]
     future_dates: List[str]
     model_key: str = ""
+    feature_importance: Optional[Dict[str, float]] = None
 
 
-def run_prediction(ticker: str, model_name: str, steps: int = 30) -> PredictionResult:
+def run_prediction(ticker: str, model_name: str, steps: int = 30, period: str = "5y") -> PredictionResult:
     import pandas as pd
 
-    data = prepare_data(ticker)
+    data = prepare_data(ticker, period=period)
     model = get_model(model_name)
 
     model.train(data.X_train, data.y_train)

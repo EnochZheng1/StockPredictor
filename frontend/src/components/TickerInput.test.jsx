@@ -17,7 +17,7 @@ describe('TickerInput', () => {
     fireEvent.change(input, { target: { value: 'msft' } });
     fireEvent.click(screen.getByRole('button', { name: /fetch data/i }));
 
-    expect(onFetch).toHaveBeenCalledWith('MSFT');
+    expect(onFetch).toHaveBeenCalledWith('MSFT', '5y');
   });
 
   it('disables button when loading', () => {

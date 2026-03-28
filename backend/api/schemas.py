@@ -6,12 +6,14 @@ class PredictionRequest(BaseModel):
     ticker: str
     model_name: str
     steps: int = 30
+    period: str = "5y"
 
 
 class ComparisonRequest(BaseModel):
     ticker: str
     model_names: List[str]
     steps: int = 30
+    period: str = "5y"
     ensemble_methods: List[str] = []
 
 
@@ -28,6 +30,7 @@ class PredictionResponse(BaseModel):
     test_dates: List[str]
     future_predictions: List[float]
     future_dates: List[str]
+    feature_importance: Optional[Dict[str, float]] = None
 
 
 class ComparisonResponse(BaseModel):

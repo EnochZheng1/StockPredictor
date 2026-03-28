@@ -13,6 +13,7 @@ def predict(request: PredictionRequest):
             ticker=request.ticker,
             model_name=request.model_name,
             steps=request.steps,
+            period=request.period,
         )
         return PredictionResponse(
             model_name=result.model_name,

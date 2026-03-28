@@ -60,6 +60,15 @@
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
+.ticker-input select {
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: white;
+  cursor: pointer;
+}
+
 /* Buttons */
 button {
   padding: 10px 20px;
@@ -185,6 +194,35 @@ button:disabled {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Feature Importance */
+.feature-importance {
+  margin: 24px 0;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.feature-importance-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.feature-importance-header h3 {
+  margin: 0;
+  color: #334155;
+}
+
+.feature-importance-header select {
+  padding: 6px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  background: white;
 }
 
 /* Prediction Chart */

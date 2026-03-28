@@ -3,6 +3,7 @@ import TickerInput from "../components/TickerInput";
 import ModelSelector from "../components/ModelSelector";
 import PredictionChart from "../components/PredictionChart";
 import ComparisonTable from "../components/ComparisonTable";
+import FeatureImportanceChart from "../components/FeatureImportanceChart";
 import LoadingSpinner from "../components/LoadingSpinner";
 import {
   fetchStockData,
@@ -16,6 +17,7 @@ export default function Dashboard() {
   const [stockData, setStockData] = useState(null);
   const [comparisonResults, setComparisonResults] = useState(null);
   const [ticker, setTicker] = useState("");
+  const [period, setPeriod] = useState("5y");
   const [fetchingStock, setFetchingStock] = useState(false);
   const [runningModels, setRunningModels] = useState(false);
   const [error, setError] = useState(null);
@@ -29,14 +31,15 @@ export default function Dashboard() {
       .catch(() => setError("Failed to load available models"));
   }, []);
 
-  const handleFetchStock = async (t) => {
+  const handleFetchStock = async (t, p) => {
     setFetchingStock(true);
     setError(null);
     setComparisonResults(null);
     try {
-      const data = await fetchStockData(t);
+      const data = await fetchStockData(t, p);
       setStockData(data);
       setTicker(t);
+      setPeriod(p);
     } catch (err) {
       setError(err.response?.data?.detail || "Failed to fetch stock data");
     } finally {
@@ -52,7 +55,7 @@ export default function Dashboard() {
     setRunningModels(true);
     setError(null);
     try {
-      const results = await runComparison(ticker, selectedModels, steps, selectedEnsembles);
+      const results = await runComparison(ticker, selectedModels, steps, period, selectedEnsembles);
       setComparisonResults(results);
     } catch (err) {
       setError(err.response?.data?.detail || "Failed to run models");
@@ -110,6 +113,8 @@ export default function Dashboard() {
           bestModel={comparisonResults.best_model}
         />
       )}
+
+      <FeatureImportanceChart comparisonResults={comparisonResults} />
     </div>
   );
 }
