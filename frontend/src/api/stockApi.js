@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:4289/api",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:4289/api",
+  timeout: 300000, // 5 min timeout for model training
 });
 
 export async function fetchStockData(ticker) {

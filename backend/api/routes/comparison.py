@@ -29,6 +29,7 @@ def compare(request: ComparisonRequest):
             results=responses,
             summary=result.summary,
             best_model=result.best_model,
+            errors=result.errors,
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

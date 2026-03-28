@@ -1,3 +1,4 @@
+import logging
 from typing import List
 import numpy as np
 from math import sqrt
@@ -8,6 +9,8 @@ from sklearn.model_selection import TimeSeriesSplit
 from services.prediction_service import PredictionResult
 from services.data_service import DataBundle
 from utils.models import get_model
+
+logger = logging.getLogger(__name__)
 
 
 def _compute_metrics(y_true, y_pred):
@@ -170,8 +173,10 @@ def run_ensembles(
         try:
             fn = ENSEMBLE_REGISTRY[method_name]
             result = fn(base_results, data, steps, test_date_strs, future_date_strs)
+            logger.info("Ensemble %s: RMSE=%.4f", method_name, result.metrics["rmse"])
             results.append(result)
-        except Exception:
+        except Exception as e:
+            logger.error("Ensemble %s failed: %s", method_name, e)
             continue
 
     return results

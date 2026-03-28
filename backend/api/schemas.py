@@ -34,6 +34,7 @@ class ComparisonResponse(BaseModel):
     results: List[PredictionResponse]
     summary: List[Dict[str, float]]
     best_model: str
+    errors: List[str] = []
 
 
 class StockDataResponse(BaseModel):

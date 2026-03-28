@@ -1,7 +1,12 @@
 import numpy as np
 import pandas as pd
-import talib
 from datetime import datetime
+
+try:
+    import talib
+    TALIB_AVAILABLE = True
+except ImportError:
+    TALIB_AVAILABLE = False
 
 def weekday(df):
     df["Wday"] = df['Date'].dt.weekday + 1
@@ -38,17 +43,20 @@ def bollinger_bands(df, timeInterval=20, num_of_std=2):
     return df
     
 def parabolic_SAR(df, acceleration=0.02, maximum=0.2):
-    df['SAR'] = talib.SAR(df['High'], df['Low'], acceleration=acceleration, maximum=maximum)
+    if TALIB_AVAILABLE:
+        df['SAR'] = talib.SAR(df['High'], df['Low'], acceleration=acceleration, maximum=maximum)
     return df
-    
+
 def average_directional_movement_index(df, timeInterval=14):
-    df['ADX'] = talib.ADX(df['High'], df['Low'], df['Close'], timeperiod=timeInterval)
+    if TALIB_AVAILABLE:
+        df['ADX'] = talib.ADX(df['High'], df['Low'], df['Close'], timeperiod=timeInterval)
     return df
-    
+
 def stochastic_oscillator(df, fastk_period=14, slowk_period=3, slowk_matype=0, slowd_period=3, slowd_matype=0):
-    df['SlowK'], df['SlowD'] = talib.STOCH(df['High'], df['Low'], df['Close'],
-                           fastk_period=fastk_period, slowk_period=slowk_period, slowk_matype=slowk_matype,
-                           slowd_period=slowd_period, slowd_matype=slowd_matype)
+    if TALIB_AVAILABLE:
+        df['SlowK'], df['SlowD'] = talib.STOCH(df['High'], df['Low'], df['Close'],
+                               fastk_period=fastk_period, slowk_period=slowk_period, slowk_matype=slowk_matype,
+                               slowd_period=slowd_period, slowd_matype=slowd_matype)
     return df
     
 def fibonacci_level(df, fib_levels=[0, 0.236, 0.382, 0.618, 0.786, 1]):

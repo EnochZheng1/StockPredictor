@@ -81,6 +81,14 @@ export default function Dashboard() {
       </div>
 
       {error && <div className="error-banner">{error}</div>}
+      {comparisonResults?.errors?.length > 0 && (
+        <div className="warning-banner">
+          Some models failed:
+          <ul>
+            {comparisonResults.errors.map((e, i) => <li key={i}>{e}</li>)}
+          </ul>
+        </div>
+      )}
       {(fetchingStock || runningModels) && (
         <LoadingSpinner
           message={

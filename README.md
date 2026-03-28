@@ -70,6 +70,27 @@ npm run start:backend
 npm run start:frontend
 ```
 
+### Run tests
+
+```bash
+# All tests
+npm test
+
+# Backend only
+npm run test:backend
+
+# Frontend only
+npm run test:frontend
+```
+
+### Configuration
+
+Copy `.env.example` to `.env` to customize ports and URLs:
+
+```bash
+cp .env.example .env
+```
+
 ### How to use
 
 1. Enter a stock ticker symbol (e.g., `AAPL`, `MSFT`, `GOOGL`) and click **Fetch Data**
