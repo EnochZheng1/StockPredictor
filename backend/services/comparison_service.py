@@ -4,10 +4,12 @@ from typing import List, Dict, Optional
 from dataclasses import dataclass
 import pandas as pd
 
-from utils.models import get_model
+from utils.models import get_model, MODEL_REGISTRY
 from services.data_service import prepare_data
 from services.prediction_service import PredictionResult
 from services.ensemble_service import run_ensembles
+from services.model_storage import load_model, save_model
+from services.db_service import save_prediction
 
 logger = logging.getLogger(__name__)
 
@@ -51,8 +53,16 @@ def run_comparison(
         try:
             model_t0 = time.time()
             kwargs = (model_params or {}).get(name, {})
-            model = get_model(name, **kwargs)
-            model.train(data.X_train, data.y_train)
+
+            # Try loading cached model
+            model_cls = MODEL_REGISTRY.get(name)
+            model = load_model(model_cls, ticker, name, period, kwargs) if model_cls else None
+            if model is None:
+                model = get_model(name, **kwargs)
+                model.train(data.X_train, data.y_train)
+                save_model(model, ticker, name, period, kwargs)
+            else:
+                logger.info("Using cached model for %s", name)
             metrics = model.evaluate(data.X_test, data.y_test)
             test_preds = model.predict(data.X_test)
             future_preds = model.predict_future(data.X_test, steps=steps)
@@ -60,6 +70,8 @@ def run_comparison(
 
             elapsed = time.time() - model_t0
             logger.info("Model %s completed in %.2fs (RMSE=%.4f)", name, elapsed, metrics["rmse"])
+
+            save_prediction(ticker, model.get_name(), period, steps, metrics, kwargs or None)
 
             results.append(PredictionResult(
                 model_name=model.get_name(),

@@ -6,6 +6,8 @@ import ComparisonTable from "../components/ComparisonTable";
 import FeatureImportanceChart from "../components/FeatureImportanceChart";
 import ExportButton from "../components/ExportButton";
 import BacktestResults from "../components/BacktestResults";
+import CandlestickChart from "../components/CandlestickChart";
+import PredictionHistory from "../components/PredictionHistory";
 import LoadingSpinner from "../components/LoadingSpinner";
 import {
   fetchStockData,
@@ -132,6 +134,8 @@ export default function Dashboard() {
         />
       )}
 
+      <CandlestickChart stockData={stockData} />
+
       <PredictionChart
         stockData={stockData}
         comparisonResults={comparisonResults}
@@ -160,6 +164,8 @@ export default function Dashboard() {
       <BacktestResults backtestData={backtestData} />
 
       <FeatureImportanceChart comparisonResults={comparisonResults} />
+
+      <PredictionHistory ticker={ticker} />
     </div>
   );
 }

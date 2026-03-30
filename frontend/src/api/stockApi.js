@@ -50,3 +50,10 @@ export async function runBacktest(ticker, modelNames, period = "5y", modelParams
   });
   return data;
 }
+
+export async function fetchHistory(ticker = null, limit = 50) {
+  const params = { limit };
+  if (ticker) params.ticker = ticker;
+  const { data } = await API.get("/history", { params });
+  return data.history;
+}

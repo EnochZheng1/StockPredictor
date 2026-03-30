@@ -13,6 +13,9 @@ env/
 
 # Data
 data.csv
+*.db
+backend/saved_models/*.joblib
+backend/saved_models/*.pt
 
 # Environment
 .env

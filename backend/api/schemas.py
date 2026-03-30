@@ -69,5 +69,9 @@ class BacktestResponse(BaseModel):
 class StockDataResponse(BaseModel):
     ticker: str
     dates: List[str]
+    open_prices: List[float]
+    high_prices: List[float]
+    low_prices: List[float]
     close_prices: List[float]
+    volume: List[float]
     indicators: Dict[str, List[Optional[float]]]

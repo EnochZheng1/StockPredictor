@@ -474,6 +474,50 @@ button:disabled {
   color: var(--text);
 }
 
+/* Candlestick Chart */
+.candlestick-chart {
+  margin: 24px 0;
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.candlestick-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.candlestick-header h3 {
+  margin: 0;
+  color: var(--text-heading);
+}
+
+.candlestick-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.candlestick-controls select {
+  padding: 4px 8px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  font-size: 0.82rem;
+  background: var(--input-bg);
+  color: var(--text);
+}
+
+.candlestick-controls label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
 /* Prediction Chart */
 .prediction-chart {
   margin: 24px 0;
@@ -558,6 +602,47 @@ button:disabled {
 
 .comparison-table .ensemble-row.best-row {
   background: var(--ensemble-best-bg);
+}
+
+/* Prediction History */
+.prediction-history {
+  margin: 24px 0;
+}
+
+.history-toggle {
+  padding: 8px 16px;
+  background: var(--chip-bg);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+}
+
+.history-toggle:hover {
+  background: var(--chip-hover);
+}
+
+.prediction-history table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.prediction-history th {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 2px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.prediction-history td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 0.85rem;
 }
 
 /* Responsive */

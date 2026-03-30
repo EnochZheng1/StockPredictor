@@ -5,6 +5,7 @@ yfinance>=0.2
 
 # ML / Stats
 scikit-learn>=1.3
+joblib>=1.3
 statsmodels>=0.14
 torch>=2.0
 xgboost>=2.0
