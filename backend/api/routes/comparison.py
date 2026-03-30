@@ -15,6 +15,7 @@ def compare(request: ComparisonRequest):
             steps=request.steps,
             period=request.period,
             ensemble_methods=request.ensemble_methods,
+            model_params=request.model_params,
         )
         responses = []
         for r in result.results:

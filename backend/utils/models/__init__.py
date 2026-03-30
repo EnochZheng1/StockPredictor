@@ -30,3 +30,13 @@ def get_model(name: str, **kwargs):
 
 def list_models():
     return list(MODEL_REGISTRY.keys())
+
+
+def get_model_params():
+    """Return tunable params for each registered model."""
+    result = {}
+    for name, cls in MODEL_REGISTRY.items():
+        params = cls.get_tunable_params()
+        if params:
+            result[name] = params
+    return result

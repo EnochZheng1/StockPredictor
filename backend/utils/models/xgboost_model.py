@@ -19,6 +19,14 @@ class XGBoostModel(BaseModel):
     def get_name(self) -> str:
         return "XGBoost"
 
+    @staticmethod
+    def get_tunable_params():
+        return {
+            "n_estimators": {"type": "int", "default": 100, "min": 10, "max": 500, "description": "Number of boosting rounds"},
+            "learning_rate": {"type": "float", "default": 0.1, "min": 0.01, "max": 1.0, "description": "Learning rate"},
+            "max_depth": {"type": "int", "default": 6, "min": 1, "max": 15, "description": "Max tree depth"},
+        }
+
     def train(self, X: pd.DataFrame, y: pd.Series) -> None:
         self.model.fit(X, y)
 

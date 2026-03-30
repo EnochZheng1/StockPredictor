@@ -12,7 +12,11 @@ export async function fetchStockData(ticker, period = "5y") {
 
 export async function getAvailableModels() {
   const { data } = await API.get("/models");
-  return { models: data.models, ensembleMethods: data.ensemble_methods || [] };
+  return {
+    models: data.models,
+    ensembleMethods: data.ensemble_methods || [],
+    modelParams: data.model_params || {},
+  };
 }
 
 export async function runPrediction(ticker, modelName, steps = 30, period = "5y") {
@@ -25,13 +29,14 @@ export async function runPrediction(ticker, modelName, steps = 30, period = "5y"
   return data;
 }
 
-export async function runComparison(ticker, modelNames, steps = 30, period = "5y", ensembleMethods = []) {
+export async function runComparison(ticker, modelNames, steps = 30, period = "5y", ensembleMethods = [], modelParams = {}) {
   const { data } = await API.post("/compare", {
     ticker,
     model_names: modelNames,
     steps,
     period,
     ensemble_methods: ensembleMethods,
+    model_params: modelParams,
   });
   return data;
 }

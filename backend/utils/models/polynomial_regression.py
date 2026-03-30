@@ -18,6 +18,12 @@ class PolynomialRegressionModel(BaseModel):
     def get_name(self) -> str:
         return f"Polynomial Regression (deg={self.degree})"
 
+    @staticmethod
+    def get_tunable_params():
+        return {
+            "degree": {"type": "int", "default": 2, "min": 1, "max": 4, "description": "Polynomial degree"},
+        }
+
     def train(self, X: pd.DataFrame, y: pd.Series) -> None:
         self.pipeline.fit(X, y)
 

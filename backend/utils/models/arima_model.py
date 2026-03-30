@@ -6,13 +6,21 @@ from utils.models.base_model import BaseModel
 
 class ARIMAModel(BaseModel):
 
-    def __init__(self, order=(5, 1, 0)):
-        self.order = order
+    def __init__(self, p=5, d=1, q=0):
+        self.order = (p, d, q)
         self.model_fit = None
         self.train_series = None
 
     def get_name(self) -> str:
         return "ARIMA"
+
+    @staticmethod
+    def get_tunable_params():
+        return {
+            "p": {"type": "int", "default": 5, "min": 0, "max": 10, "description": "Autoregressive order"},
+            "d": {"type": "int", "default": 1, "min": 0, "max": 3, "description": "Differencing order"},
+            "q": {"type": "int", "default": 0, "min": 0, "max": 10, "description": "Moving average order"},
+        }
 
     def train(self, X: pd.DataFrame, y: pd.Series) -> None:
         self.train_series = y.values

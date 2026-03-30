@@ -3,7 +3,7 @@ import numpy as np
 
 from utils.data_fetcher import get_historical_data
 from utils.data_analysis import technical_indictors_calculation
-from utils.models import list_models
+from utils.models import list_models, get_model_params
 from services.ensemble_service import list_ensemble_methods
 from api.schemas import StockDataResponse
 
@@ -44,4 +44,8 @@ def get_stock_data(ticker: str, period: str = "5y"):
 
 @router.get("/models")
 def get_available_models():
-    return {"models": list_models(), "ensemble_methods": list_ensemble_methods()}
+    return {
+        "models": list_models(),
+        "ensemble_methods": list_ensemble_methods(),
+        "model_params": get_model_params(),
+    }

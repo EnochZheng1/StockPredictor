@@ -30,6 +30,7 @@ def run_comparison(
     steps: int = 30,
     period: str = "5y",
     ensemble_methods: Optional[List[str]] = None,
+    model_params: Optional[Dict[str, Dict]] = None,
 ) -> ComparisonResult:
     logger.info("Starting comparison for %s with models: %s", ticker, model_names)
     t0 = time.time()
@@ -49,7 +50,8 @@ def run_comparison(
     for name in model_names:
         try:
             model_t0 = time.time()
-            model = get_model(name)
+            kwargs = (model_params or {}).get(name, {})
+            model = get_model(name, **kwargs)
             model.train(data.X_train, data.y_train)
             metrics = model.evaluate(data.X_test, data.y_test)
             test_preds = model.predict(data.X_test)

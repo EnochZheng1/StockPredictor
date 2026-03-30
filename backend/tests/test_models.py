@@ -77,7 +77,7 @@ class TestFeatureBasedModels:
 
 class TestARIMAModel:
     def test_train_predict(self, sample_feature_data):
-        model = ARIMAModel(order=(2, 1, 0))
+        model = ARIMAModel(p=2, d=1, q=0)
         d = sample_feature_data
 
         model.train(d["X_train"], d["y_train"])
@@ -86,7 +86,7 @@ class TestARIMAModel:
         assert len(preds) == len(d["X_test"])
 
     def test_predict_future(self, sample_feature_data):
-        model = ARIMAModel(order=(2, 1, 0))
+        model = ARIMAModel(p=2, d=1, q=0)
         d = sample_feature_data
 
         model.train(d["X_train"], d["y_train"])

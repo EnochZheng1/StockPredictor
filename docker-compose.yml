@@ -1,0 +1,18 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "4289:4289"
+    environment:
+      - FRONTEND_URL=http://localhost:4290
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4290:4290"
+    depends_on:
+      - backend

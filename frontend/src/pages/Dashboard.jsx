@@ -4,6 +4,7 @@ import ModelSelector from "../components/ModelSelector";
 import PredictionChart from "../components/PredictionChart";
 import ComparisonTable from "../components/ComparisonTable";
 import FeatureImportanceChart from "../components/FeatureImportanceChart";
+import ExportButton from "../components/ExportButton";
 import LoadingSpinner from "../components/LoadingSpinner";
 import {
   fetchStockData,
@@ -14,6 +15,7 @@ import {
 export default function Dashboard() {
   const [models, setModels] = useState([]);
   const [ensembleMethods, setEnsembleMethods] = useState([]);
+  const [modelParams, setModelParams] = useState({});
   const [stockData, setStockData] = useState(null);
   const [comparisonResults, setComparisonResults] = useState(null);
   const [ticker, setTicker] = useState("");
@@ -24,9 +26,10 @@ export default function Dashboard() {
 
   useEffect(() => {
     getAvailableModels()
-      .then(({ models, ensembleMethods }) => {
+      .then(({ models, ensembleMethods, modelParams }) => {
         setModels(models);
         setEnsembleMethods(ensembleMethods);
+        setModelParams(modelParams);
       })
       .catch(() => setError("Failed to load available models"));
   }, []);
@@ -47,7 +50,7 @@ export default function Dashboard() {
     }
   };
 
-  const handleRunComparison = async (selectedModels, steps, selectedEnsembles = []) => {
+  const handleRunComparison = async (selectedModels, steps, selectedEnsembles = [], paramOverrides = {}) => {
     if (!ticker) {
       setError("Please fetch stock data first");
       return;
@@ -55,7 +58,7 @@ export default function Dashboard() {
     setRunningModels(true);
     setError(null);
     try {
-      const results = await runComparison(ticker, selectedModels, steps, period, selectedEnsembles);
+      const results = await runComparison(ticker, selectedModels, steps, period, selectedEnsembles, paramOverrides);
       setComparisonResults(results);
     } catch (err) {
       setError(err.response?.data?.detail || "Failed to run models");
@@ -77,6 +80,7 @@ export default function Dashboard() {
           <ModelSelector
             models={models}
             ensembleMethods={ensembleMethods}
+            modelParams={modelParams}
             onRun={handleRunComparison}
             loading={runningModels}
           />
@@ -113,6 +117,8 @@ export default function Dashboard() {
           bestModel={comparisonResults.best_model}
         />
       )}
+
+      <ExportButton comparisonResults={comparisonResults} />
 
       <FeatureImportanceChart comparisonResults={comparisonResults} />
     </div>

@@ -15,6 +15,7 @@ class ComparisonRequest(BaseModel):
     steps: int = 30
     period: str = "5y"
     ensemble_methods: List[str] = []
+    model_params: Dict[str, Dict] = {}  # e.g. {"random_forest": {"n_estimators": 200}}
 
 
 class MetricsResponse(BaseModel):

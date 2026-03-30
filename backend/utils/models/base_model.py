@@ -25,6 +25,11 @@ class BaseModel(ABC):
     def predict_future(self, last_known_data: pd.DataFrame, steps: int = 30) -> list:
         pass
 
+    @staticmethod
+    def get_tunable_params() -> Dict:
+        """Return {param_name: {type, default, min, max, description}}."""
+        return {}
+
     def get_feature_importance(self, feature_names: List[str]) -> Optional[Dict[str, float]]:
         """Return feature importances as {name: score}. None if not supported."""
         return None

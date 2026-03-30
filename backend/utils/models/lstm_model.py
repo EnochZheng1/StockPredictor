@@ -30,6 +30,14 @@ class LSTMModel(BaseModel, nn.Module):
     def get_name(self) -> str:
         return "LSTM"
 
+    @staticmethod
+    def get_tunable_params():
+        return {
+            "hidden_layer_size": {"type": "int", "default": 64, "min": 16, "max": 256, "description": "Hidden layer size"},
+            "epochs": {"type": "int", "default": 25, "min": 5, "max": 200, "description": "Training epochs"},
+            "sequence_length": {"type": "int", "default": 10, "min": 3, "max": 60, "description": "Lookback window"},
+        }
+
     def forward(self, x):
         h0 = torch.zeros(self.num_layers, x.size(0), self.hidden_layer_size)
         c0 = torch.zeros(self.num_layers, x.size(0), self.hidden_layer_size)
