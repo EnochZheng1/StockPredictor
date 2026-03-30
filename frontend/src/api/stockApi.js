@@ -51,6 +51,21 @@ export async function runBacktest(ticker, modelNames, period = "5y", modelParams
   return data;
 }
 
+export async function runPortfolio(tickers, modelName, steps = 30, period = "5y") {
+  const { data } = await API.post("/portfolio", {
+    tickers,
+    model_name: modelName,
+    steps,
+    period,
+  });
+  return data;
+}
+
+export async function fetchSentiment(ticker) {
+  const { data } = await API.get(`/sentiment/${ticker}`);
+  return data;
+}
+
 export async function fetchHistory(ticker = null, limit = 50) {
   const params = { limit };
   if (ticker) params.ticker = ticker;

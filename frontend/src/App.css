@@ -474,6 +474,148 @@ button:disabled {
   color: var(--text);
 }
 
+/* Live Ticker */
+.live-ticker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.live-up {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+.live-down {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+[data-theme="dark"] .live-up {
+  background: #052e16;
+  border-color: #166534;
+}
+
+[data-theme="dark"] .live-down {
+  background: #450a0a;
+  border-color: #991b1b;
+}
+
+.live-ticker-symbol {
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.live-ticker-price {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+.live-ticker-change {
+  font-weight: 600;
+}
+
+.live-up .live-ticker-change {
+  color: #16a34a;
+}
+
+.live-down .live-ticker-change {
+  color: #dc2626;
+}
+
+.live-ticker-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #16a34a;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Sentiment Panel */
+.sentiment-panel {
+  margin: 24px 0;
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.sentiment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.sentiment-header h3 {
+  margin: 0;
+  color: var(--text-heading);
+}
+
+.sentiment-score {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.sentiment-articles {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sentiment-article {
+  padding: 10px;
+  background: var(--chip-bg);
+  border-radius: 6px;
+}
+
+.sentiment-article-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.sentiment-badge {
+  display: inline-block;
+  padding: 1px 8px;
+  color: white;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.sentiment-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.sentiment-title {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--accent);
+  text-decoration: none;
+  margin-bottom: 2px;
+}
+
+.sentiment-title:hover {
+  text-decoration: underline;
+}
+
+.sentiment-publisher {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
 /* Candlestick Chart */
 .candlestick-chart {
   margin: 24px 0;
@@ -602,6 +744,104 @@ button:disabled {
 
 .comparison-table .ensemble-row.best-row {
   background: var(--ensemble-best-bg);
+}
+
+/* Portfolio View */
+.portfolio-view {
+  margin: 24px 0;
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.portfolio-view h3 {
+  margin: 0 0 4px;
+  color: var(--text-heading);
+}
+
+.portfolio-desc {
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.portfolio-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.portfolio-controls input[type="text"] {
+  flex: 1;
+  min-width: 200px;
+  padding: 8px 12px;
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: var(--input-bg);
+  color: var(--text);
+}
+
+.portfolio-controls select {
+  padding: 8px 10px;
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  background: var(--input-bg);
+  color: var(--text);
+}
+
+.portfolio-controls input[type="number"] {
+  padding: 8px 6px;
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  background: var(--input-bg);
+  color: var(--text);
+}
+
+.portfolio-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.portfolio-model-label {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.portfolio-results table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.portfolio-results th {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 2px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.portfolio-results td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 0.9rem;
+}
+
+.portfolio-results .positive {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.portfolio-results .negative {
+  color: #dc2626;
+  font-weight: 600;
 }
 
 /* Prediction History */

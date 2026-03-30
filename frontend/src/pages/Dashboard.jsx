@@ -8,6 +8,9 @@ import ExportButton from "../components/ExportButton";
 import BacktestResults from "../components/BacktestResults";
 import CandlestickChart from "../components/CandlestickChart";
 import PredictionHistory from "../components/PredictionHistory";
+import PortfolioView from "../components/PortfolioView";
+import SentimentPanel from "../components/SentimentPanel";
+import LiveTicker from "../components/LiveTicker";
 import LoadingSpinner from "../components/LoadingSpinner";
 import {
   fetchStockData,
@@ -98,9 +101,12 @@ export default function Dashboard() {
       <div className="controls">
         <TickerInput onFetch={handleFetchStock} loading={fetchingStock} />
         {ticker && (
-          <p className="ticker-label">
-            Showing data for: <strong>{ticker}</strong>
-          </p>
+          <>
+            <p className="ticker-label">
+              Showing data for: <strong>{ticker}</strong>
+            </p>
+            <LiveTicker ticker={ticker} />
+          </>
         )}
         {models.length > 0 && (
           <ModelSelector
@@ -134,6 +140,8 @@ export default function Dashboard() {
         />
       )}
 
+      <SentimentPanel ticker={ticker} />
+
       <CandlestickChart stockData={stockData} />
 
       <PredictionChart
@@ -166,6 +174,8 @@ export default function Dashboard() {
       <FeatureImportanceChart comparisonResults={comparisonResults} />
 
       <PredictionHistory ticker={ticker} />
+
+      {models.length > 0 && <PortfolioView models={models} />}
     </div>
   );
 }

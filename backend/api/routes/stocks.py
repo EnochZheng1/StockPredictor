@@ -7,6 +7,7 @@ from utils.data_analysis import technical_indictors_calculation
 from utils.models import list_models, get_model_params
 from services.ensemble_service import list_ensemble_methods
 from services.db_service import get_history
+from services.sentiment_service import get_news_sentiment
 from api.schemas import StockDataResponse
 
 router = APIRouter()
@@ -63,3 +64,8 @@ def get_available_models():
 @router.get("/history")
 def get_prediction_history(ticker: str = None, limit: int = 50):
     return {"history": get_history(ticker=ticker, limit=limit)}
+
+
+@router.get("/sentiment/{ticker}")
+def get_sentiment(ticker: str):
+    return get_news_sentiment(ticker)
