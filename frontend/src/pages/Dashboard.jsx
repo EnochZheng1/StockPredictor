@@ -5,11 +5,13 @@ import PredictionChart from "../components/PredictionChart";
 import ComparisonTable from "../components/ComparisonTable";
 import FeatureImportanceChart from "../components/FeatureImportanceChart";
 import ExportButton from "../components/ExportButton";
+import BacktestResults from "../components/BacktestResults";
 import LoadingSpinner from "../components/LoadingSpinner";
 import {
   fetchStockData,
   getAvailableModels,
   runComparison,
+  runBacktest,
 } from "../api/stockApi";
 
 export default function Dashboard() {
@@ -18,10 +20,14 @@ export default function Dashboard() {
   const [modelParams, setModelParams] = useState({});
   const [stockData, setStockData] = useState(null);
   const [comparisonResults, setComparisonResults] = useState(null);
+  const [backtestData, setBacktestData] = useState(null);
   const [ticker, setTicker] = useState("");
   const [period, setPeriod] = useState("5y");
+  const [lastSelectedModels, setLastSelectedModels] = useState([]);
+  const [lastParamOverrides, setLastParamOverrides] = useState({});
   const [fetchingStock, setFetchingStock] = useState(false);
   const [runningModels, setRunningModels] = useState(false);
+  const [runningBacktest, setRunningBacktest] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -38,6 +44,7 @@ export default function Dashboard() {
     setFetchingStock(true);
     setError(null);
     setComparisonResults(null);
+    setBacktestData(null);
     try {
       const data = await fetchStockData(t, p);
       setStockData(data);
@@ -57,13 +64,30 @@ export default function Dashboard() {
     }
     setRunningModels(true);
     setError(null);
+    setLastSelectedModels(selectedModels);
+    setLastParamOverrides(paramOverrides);
     try {
       const results = await runComparison(ticker, selectedModels, steps, period, selectedEnsembles, paramOverrides);
       setComparisonResults(results);
+      setBacktestData(null);
     } catch (err) {
       setError(err.response?.data?.detail || "Failed to run models");
     } finally {
       setRunningModels(false);
+    }
+  };
+
+  const handleRunBacktest = async () => {
+    if (!ticker || lastSelectedModels.length === 0) return;
+    setRunningBacktest(true);
+    setError(null);
+    try {
+      const data = await runBacktest(ticker, lastSelectedModels, period, lastParamOverrides);
+      setBacktestData(data);
+    } catch (err) {
+      setError(err.response?.data?.detail || "Failed to run backtest");
+    } finally {
+      setRunningBacktest(false);
     }
   };
 
@@ -96,12 +120,14 @@ export default function Dashboard() {
           </ul>
         </div>
       )}
-      {(fetchingStock || runningModels) && (
+      {(fetchingStock || runningModels || runningBacktest) && (
         <LoadingSpinner
           message={
             fetchingStock
               ? "Fetching stock data..."
-              : "Running models (this may take a minute)..."
+              : runningBacktest
+                ? "Running backtest..."
+                : "Running models (this may take a minute)..."
           }
         />
       )}
@@ -118,7 +144,20 @@ export default function Dashboard() {
         />
       )}
 
-      <ExportButton comparisonResults={comparisonResults} />
+      {comparisonResults && (
+        <div className="backtest-actions">
+          <ExportButton comparisonResults={comparisonResults} />
+          <button
+            className="backtest-btn"
+            onClick={handleRunBacktest}
+            disabled={runningBacktest}
+          >
+            {runningBacktest ? "Running Backtest..." : "Run Backtest"}
+          </button>
+        </div>
+      )}
+
+      <BacktestResults backtestData={backtestData} />
 
       <FeatureImportanceChart comparisonResults={comparisonResults} />
     </div>

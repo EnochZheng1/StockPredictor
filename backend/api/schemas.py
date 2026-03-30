@@ -41,6 +41,31 @@ class ComparisonResponse(BaseModel):
     errors: List[str] = []
 
 
+class BacktestRequest(BaseModel):
+    ticker: str
+    model_names: List[str]
+    period: str = "5y"
+    model_params: Dict[str, Dict] = {}
+
+
+class BacktestResultResponse(BaseModel):
+    model_name: str
+    total_return: float
+    buy_hold_return: float
+    sharpe_ratio: float
+    max_drawdown: float
+    win_rate: float
+    num_trades: int
+    equity_curve: List[float]
+    dates: List[str]
+
+
+class BacktestResponse(BaseModel):
+    results: List[BacktestResultResponse]
+    buy_hold_return: float
+    best_strategy: str
+
+
 class StockDataResponse(BaseModel):
     ticker: str
     dates: List[str]

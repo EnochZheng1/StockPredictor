@@ -1,6 +1,18 @@
 # StockPredictor
 
-A multi-model stock price prediction platform. Compare 7 different math/stats models side-by-side to forecast stock prices using historical data and technical indicators.
+A multi-model stock price prediction platform. Compare 7 prediction models + 3 ensemble methods side-by-side, run backtests, and visualize results through an interactive React dashboard.
+
+## Features
+
+- **7 Prediction Models**: ARIMA, Linear Regression, LSTM, Random Forest, XGBoost, Prophet, Polynomial Regression
+- **3 Ensemble Methods**: Simple Average, Weighted Average (inverse RMSE), Stacking (Ridge)
+- **15+ Technical Indicators**: SMA, EMA, RSI, MACD, Bollinger Bands, ADX, OBV, ATR, Ichimoku, and more
+- **Backtesting Engine**: Simulate buy/sell strategies with P&L tracking, Sharpe ratio, max drawdown
+- **Hyperparameter Tuning**: Adjust model parameters directly from the UI
+- **Feature Importance**: Visualize which indicators drive predictions (Random Forest, XGBoost)
+- **CSV Export**: Download metrics and prediction data
+- **Dark Mode**: Toggle between light and dark themes
+- **Responsive Design**: Works on desktop, tablet, and mobile
 
 ## Models
 
@@ -14,41 +26,36 @@ A multi-model stock price prediction platform. Compare 7 different math/stats mo
 | Prophet | Time Series | prophet |
 | Polynomial Regression | Feature-based | scikit-learn |
 
-## Technical Indicators
+## Quick Start
 
-The data pipeline computes 15+ indicators automatically: SMA, EMA, RSI, MACD, Bollinger Bands, Parabolic SAR, ADX, Stochastic Oscillator, OBV, Momentum, ATR, Ichimoku Cloud, and Williams %R.
+### Option 1: Docker (recommended)
 
-## Prerequisites
+```bash
+docker-compose up --build
+```
+
+Open `http://localhost:4290`.
+
+### Option 2: Local Development
+
+#### Prerequisites
 
 - Python 3.9+
 - Node.js 18+
-- [TA-Lib C library](https://github.com/cgohlke/talib-build/) (required for some technical indicators)
+- [TA-Lib C library](https://github.com/cgohlke/talib-build/) (optional, for SAR/ADX/Stochastic)
 
-## Installation
-
-### 1. Clone and install root dependencies
+#### Installation
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/EnochZheng1/StockPredictor.git
 cd StockPredictor
-npm install
+npm install                    # root dependencies (concurrently)
+pip install -r requirements.txt  # Python dependencies
+npm run install:frontend       # React dependencies
+cp .env.example .env           # configure ports (optional)
 ```
 
-### 2. Install Python dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Install frontend dependencies
-
-```bash
-npm run install:frontend
-```
-
-## Usage
-
-### Start both servers with one command
+#### Run
 
 ```bash
 npm start
@@ -58,102 +65,102 @@ This launches:
 - **Backend API** at `http://localhost:4289` (FastAPI + uvicorn)
 - **Frontend UI** at `http://localhost:4290` (Vite + React)
 
-Open `http://localhost:4290` in your browser.
-
-### Start servers individually
-
-```bash
-# Backend only
-npm run start:backend
-
-# Frontend only
-npm run start:frontend
-```
-
 ### Run tests
 
 ```bash
-# All tests
-npm test
-
-# Backend only
-npm run test:backend
-
-# Frontend only
-npm run test:frontend
+npm test                  # all tests
+npm run test:backend      # pytest (33 tests)
+npm run test:frontend     # vitest (14 tests)
 ```
 
-### Configuration
+## How to Use
 
-Copy `.env.example` to `.env` to customize ports and URLs:
+1. Enter a stock ticker (e.g., `AAPL`) and select a time period, then click **Fetch Data**
+2. Select models using checkboxes -- click **Tune** to adjust hyperparameters
+3. Optionally select ensemble methods (requires 2+ models)
+4. Set forecast days and click **Run Comparison**
+5. View prediction chart, metrics table, and feature importance
+6. Click **Run Backtest** to simulate a long/flat trading strategy
+7. Click **Export Metrics CSV** or **Export Predictions CSV** to download results
 
-```bash
-cp .env.example .env
-```
-
-### How to use
-
-1. Enter a stock ticker symbol (e.g., `AAPL`, `MSFT`, `GOOGL`) and click **Fetch Data**
-2. Select one or more prediction models using the checkboxes
-3. Set the number of forecast days (default: 30)
-4. Click **Run Comparison**
-5. View the prediction chart and metrics comparison table
-
-### API endpoints
-
-The backend API is also available directly:
+## API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/stocks/{ticker}` | Fetch historical data + indicators |
-| GET | `/api/models` | List available models |
-| POST | `/api/predict` | Run a single model prediction |
-| POST | `/api/compare` | Compare multiple models |
+| GET | `/api/stocks/{ticker}` | Historical data + technical indicators |
+| GET | `/api/models` | Available models, ensemble methods, tunable params |
+| POST | `/api/predict` | Single model prediction |
+| POST | `/api/compare` | Multi-model comparison with optional ensembles |
+| POST | `/api/backtest` | Run backtest on selected models |
 
-Interactive API docs are available at `http://localhost:4289/docs`.
+Interactive API docs: `http://localhost:4289/docs`
 
-#### Example: Compare models via API
+#### Example: Compare models
 
 ```bash
 curl -X POST http://localhost:4289/api/compare \
   -H "Content-Type: application/json" \
-  -d '{"ticker": "AAPL", "model_names": ["random_forest", "xgboost", "arima"], "steps": 30}'
+  -d '{
+    "ticker": "AAPL",
+    "model_names": ["random_forest", "xgboost", "arima"],
+    "steps": 30,
+    "period": "5y",
+    "ensemble_methods": ["ensemble_weighted"]
+  }'
 ```
 
 ## Project Structure
 
 ```
 StockPredictor/
-├── package.json              # Root scripts (npm start runs both servers)
+├── docker-compose.yml        # Docker orchestration
+├── package.json              # Root scripts (npm start, npm test)
 ├── requirements.txt          # Python dependencies
+├── .env.example              # Port/URL configuration template
+├── .github/workflows/ci.yml  # GitHub Actions CI
 ├── backend/
+│   ├── Dockerfile
 │   ├── app.py                # FastAPI entry point
 │   ├── api/
-│   │   ├── schemas.py        # Pydantic request/response models
-│   │   └── routes/           # API route handlers
+│   │   ├── schemas.py        # Pydantic models
+│   │   └── routes/           # stocks, predictions, comparison, backtest
 │   ├── services/
-│   │   ├── data_service.py   # Data fetching + train/test splitting
+│   │   ├── data_service.py   # Data fetching + train/test split
 │   │   ├── prediction_service.py
-│   │   └── comparison_service.py
+│   │   ├── comparison_service.py
+│   │   ├── ensemble_service.py
+│   │   └── backtest_service.py
+│   ├── tests/                # pytest test suite
 │   └── utils/
-│       ├── data_fetcher.py   # yfinance wrapper
-│       ├── data_analysis.py  # Technical indicators
-│       └── models/           # All 7 prediction models
-├── frontend/
-│   └── src/
-│       ├── api/stockApi.js   # Backend API client
-│       ├── components/       # React components
-│       └── pages/Dashboard.jsx
+│       ├── data_fetcher.py   # yfinance wrapper with caching
+│       ├── data_analysis.py  # 15+ technical indicators
+│       └── models/           # 7 prediction models + registry
+└── frontend/
+    ├── Dockerfile
+    ├── nginx.conf
+    └── src/
+        ├── api/stockApi.js
+        ├── components/       # TickerInput, ModelSelector, Charts, Tables
+        └── pages/Dashboard.jsx
 ```
 
 ## Evaluation Metrics
 
-Models are compared using:
-- **RMSE** (Root Mean Squared Error) - lower is better
-- **MAE** (Mean Absolute Error) - lower is better
-- **R2** (R-squared) - closer to 1 is better
+| Metric | Description | Goal |
+|--------|-------------|------|
+| RMSE | Root Mean Squared Error | Lower is better |
+| MAE | Mean Absolute Error | Lower is better |
+| R2 | R-squared | Closer to 1 is better |
 
 Data is split 80/20 using a **time-ordered split** (no shuffle) to prevent data leakage.
+
+## Backtesting
+
+The backtesting engine runs a **long/flat strategy** on the test period:
+- **Buy** when the model predicts the next price will be higher
+- **Hold cash** when the model predicts the price will drop
+
+Metrics: Total Return, Sharpe Ratio, Max Drawdown, Win Rate, number of trades.
 
 ## Ports
 

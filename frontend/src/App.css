@@ -366,6 +366,84 @@ button:disabled {
   background: #047857;
 }
 
+/* Backtest */
+.backtest-actions {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+  align-items: center;
+}
+
+.backtest-btn {
+  padding: 8px 16px;
+  background: #7c3aed;
+  font-size: 0.85rem;
+}
+
+.backtest-btn:hover:not(:disabled) {
+  background: #6d28d9;
+}
+
+.backtest-results {
+  margin: 24px 0;
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.backtest-results h3 {
+  margin: 0 0 4px;
+  color: var(--text-heading);
+}
+
+.backtest-subtitle {
+  margin: 0 0 16px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.backtest-chart {
+  margin-bottom: 20px;
+}
+
+.backtest-chart h4 {
+  margin: 0 0 10px;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.backtest-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.backtest-table th {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 2px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.backtest-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 0.9rem;
+}
+
+.backtest-table .positive {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.backtest-table .negative {
+  color: #dc2626;
+  font-weight: 600;
+}
+
 /* Feature Importance */
 .feature-importance {
   margin: 24px 0;
@@ -480,6 +558,92 @@ button:disabled {
 
 .comparison-table .ensemble-row.best-row {
   background: var(--ensemble-best-bg);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .app {
+    padding: 12px;
+  }
+
+  .app-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .app-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .ticker-input {
+    flex-wrap: wrap;
+  }
+
+  .ticker-input input {
+    max-width: 100%;
+  }
+
+  .model-checkboxes {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .param-row {
+    flex-wrap: wrap;
+  }
+
+  .backtest-actions {
+    flex-wrap: wrap;
+  }
+
+  .comparison-table,
+  .backtest-results {
+    overflow-x: auto;
+  }
+
+  .comparison-table table,
+  .backtest-table {
+    min-width: 500px;
+  }
+
+  .export-buttons {
+    flex-wrap: wrap;
+  }
+
+  .prediction-chart,
+  .feature-importance,
+  .backtest-chart {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header h1 {
+    font-size: 1.25rem;
+  }
+
+  .model-item-row {
+    padding: 8px;
+  }
+
+  .param-panel {
+    padding: 6px 8px 6px 16px;
+  }
+
+  .param-row label {
+    min-width: 100px;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .export-btn,
+  .backtest-btn,
+  .theme-toggle {
+    width: auto;
+  }
 }
 
 .best-badge {

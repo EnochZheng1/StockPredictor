@@ -40,3 +40,13 @@ export async function runComparison(ticker, modelNames, steps = 30, period = "5y
   });
   return data;
 }
+
+export async function runBacktest(ticker, modelNames, period = "5y", modelParams = {}) {
+  const { data } = await API.post("/backtest", {
+    ticker,
+    model_names: modelNames,
+    period,
+    model_params: modelParams,
+  });
+  return data;
+}

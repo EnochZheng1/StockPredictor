@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.routes import stocks, predictions, comparison
+from api.routes import stocks, predictions, comparison, backtest
 
 load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
 
@@ -42,6 +42,7 @@ async def log_requests(request: Request, call_next):
 app.include_router(stocks.router, prefix="/api")
 app.include_router(predictions.router, prefix="/api")
 app.include_router(comparison.router, prefix="/api")
+app.include_router(backtest.router, prefix="/api")
 
 
 @app.get("/")
