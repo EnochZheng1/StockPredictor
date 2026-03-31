@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { runPortfolio } from "../api/stockApi";
 
 const MODEL_LABELS = {
@@ -18,19 +18,24 @@ export default function PortfolioView({ models }) {
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => { mountedRef.current = false; };
+  }, []);
 
   const handleRun = async () => {
-    const tickers = tickersInput.split(",").map((t) => t.trim()).filter(Boolean);
+    const tickers = tickersInput.split(",").map((t) => t.trim().toUpperCase()).filter(Boolean);
     if (tickers.length === 0) return;
     setLoading(true);
     setError(null);
     try {
       const data = await runPortfolio(tickers, model, steps);
-      setResults(data);
+      if (mountedRef.current) setResults(data);
     } catch (err) {
-      setError(err.response?.data?.detail || "Failed to run portfolio comparison");
+      if (mountedRef.current) setError(err.response?.data?.detail || "Failed to run portfolio comparison");
     } finally {
-      setLoading(false);
+      if (mountedRef.current) setLoading(false);
     }
   };
 

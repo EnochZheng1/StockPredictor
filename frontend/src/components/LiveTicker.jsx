@@ -11,25 +11,36 @@ export default function LiveTicker({ ticker }) {
       .replace(/^http/, "ws")
       .replace(/\/api$/, "");
 
-    const ws = new WebSocket(`${wsUrl}/ws/price/${ticker}`);
+    let ws;
+    try {
+      ws = new WebSocket(`${wsUrl}/ws/price/${ticker}`);
+    } catch {
+      return; // WebSocket constructor failed (e.g., invalid URL)
+    }
     wsRef.current = ws;
 
     ws.onmessage = (event) => {
       try {
         const parsed = JSON.parse(event.data);
         if (!parsed.error) setData(parsed);
-      } catch {}
+      } catch (e) {
+        console.warn("LiveTicker: failed to parse message", e);
+      }
     };
 
-    ws.onerror = () => {};
+    ws.onerror = () => {
+      console.warn("LiveTicker: WebSocket error for", ticker);
+    };
 
     return () => {
-      ws.close();
+      if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
+        ws.close();
+      }
       wsRef.current = null;
     };
   }, [ticker]);
 
-  if (!data || !data.price) return null;
+  if (!data || data.price == null) return null;
 
   const isUp = (data.change || 0) >= 0;
 

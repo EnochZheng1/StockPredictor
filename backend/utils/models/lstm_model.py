@@ -45,8 +45,8 @@ class LSTMModel(BaseModel, nn.Module):
         }
 
     def forward(self, x):
-        h0 = torch.zeros(self.num_layers, x.size(0), self.hidden_layer_size)
-        c0 = torch.zeros(self.num_layers, x.size(0), self.hidden_layer_size)
+        h0 = torch.zeros(self.num_layers, x.size(0), self.hidden_layer_size, device=x.device)
+        c0 = torch.zeros(self.num_layers, x.size(0), self.hidden_layer_size, device=x.device)
         out, _ = self.lstm(x, (h0, c0))
         out = self.linear(out[:, -1, :])
         return out

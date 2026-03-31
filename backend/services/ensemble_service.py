@@ -102,7 +102,8 @@ def stacking_ensemble(
                 model.train(X_fold_train, y_fold_train)
                 fold_preds = model.predict(X_fold_val)
                 oof_predictions[fold_val_idx, j] = fold_preds
-            except Exception:
+            except (ValueError, RuntimeError, TypeError, AttributeError) as e:
+                logger.warning("Stacking fold failed for model %d: %s", j, e)
                 valid_models = [m for m in valid_models if m != j]
 
     if len(valid_models) < 2:

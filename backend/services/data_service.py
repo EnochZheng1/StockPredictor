@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import List
 
 from utils.data_fetcher import get_historical_data
-from utils.data_analysis import technical_indictors_calculation
+from utils.data_analysis import technical_indicators_calculation
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +33,7 @@ def prepare_data(ticker: str, period: str = "5y", test_ratio: float = 0.2) -> Da
     if df is None or df.empty:
         raise ValueError(f"No data returned for ticker '{ticker}'. Check that it is a valid symbol.")
 
-    df = technical_indictors_calculation(df)
+    df = technical_indicators_calculation(df)
 
     # Flatten multi-level columns if yfinance returns them
     if isinstance(df.columns, pd.MultiIndex):

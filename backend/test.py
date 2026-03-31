@@ -22,7 +22,7 @@ def plot_data(df):
     
 
 data = get_historical_data("AAPL")
-analysis = technical_indictors_calculation(data)
+analysis = technical_indicators_calculation(data)
 if os.path.exists('data.csv'):
     os.remove('data.csv')
 analysis.to_csv('data.csv', index=False)

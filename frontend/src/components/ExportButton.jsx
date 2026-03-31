@@ -1,5 +1,5 @@
 export default function ExportButton({ comparisonResults }) {
-  if (!comparisonResults || comparisonResults.results.length === 0) return null;
+  if (!comparisonResults?.results?.length) return null;
 
   const exportMetricsCSV = () => {
     const header = "Model,RMSE,MAE,R2";

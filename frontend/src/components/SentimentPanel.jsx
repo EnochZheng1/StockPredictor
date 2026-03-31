@@ -10,17 +10,20 @@ const LABEL_COLORS = {
 export default function SentimentPanel({ ticker }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!ticker) return;
     setLoading(true);
+    setError(null);
     fetchSentiment(ticker)
       .then(setData)
-      .catch(() => setData(null))
+      .catch(() => setError("Failed to load sentiment data"))
       .finally(() => setLoading(false));
   }, [ticker]);
 
   if (!ticker || loading) return null;
+  if (error) return null;
   if (!data || data.error || !data.articles?.length) return null;
 
   const sentimentColor = data.avg_sentiment >= 0.05
@@ -38,12 +41,12 @@ export default function SentimentPanel({ ticker }) {
         </span>
       </div>
       <div className="sentiment-articles">
-        {data.articles.map((article, i) => (
-          <div key={i} className="sentiment-article">
+        {data.articles.map((article) => (
+          <div key={article.url || article.title} className="sentiment-article">
             <div className="sentiment-article-header">
               <span
                 className="sentiment-badge"
-                style={{ background: LABEL_COLORS[article.sentiment_label] }}
+                style={{ background: LABEL_COLORS[article.sentiment_label] || "#64748b" }}
               >
                 {article.sentiment_label} ({article.sentiment_score})
               </span>

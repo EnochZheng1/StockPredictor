@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 from utils.data_fetcher import get_historical_data
-from utils.data_analysis import technical_indictors_calculation
+from utils.data_analysis import technical_indicators_calculation
 from utils.models import list_models, get_model_params
 from services.ensemble_service import list_ensemble_methods
 from services.db_service import get_history
@@ -17,7 +17,7 @@ router = APIRouter()
 def get_stock_data(ticker: str, period: str = "5y"):
     try:
         df = get_historical_data(ticker, period=period)
-        df = technical_indictors_calculation(df)
+        df = technical_indicators_calculation(df)
 
         if "Date" not in df.columns and df.index.name == "Date":
             df = df.reset_index()

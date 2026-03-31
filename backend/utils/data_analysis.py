@@ -24,7 +24,7 @@ def rsi(df, timeInterval=14):
     delta = df['Adj Close'].diff(1)
     gain = (delta.where(delta > 0, 0)).rolling(window=timeInterval).mean()
     loss = (-delta.where(delta < 0, 0)).rolling(window=timeInterval).mean()
-    rs = gain / loss
+    rs = gain / loss.replace(0, 1e-10)
     df['RSI'] = 100 - (100 / (1 + rs))
     return df
     
@@ -101,7 +101,7 @@ def ichimoku_cloud(df):
     low_52 = df['Low'].rolling(window=52).min()
     df['Senkou_span_B'] = ((high_52 + low_52) / 2).shift(26)
 
-    df['Chikou_span'] = df['Adj Close'].shift(-26)
+    df['Chikou_span'] = df['Adj Close'].shift(26)
     return df
 
 def williams_r(df, timeInterval=14):
@@ -110,7 +110,7 @@ def williams_r(df, timeInterval=14):
     df['Williams_%R'] = ((highest_high - df['Adj Close']) / (highest_high - lowest_low)) * -100
     return df
     
-def technical_indictors_calculation(df):
+def technical_indicators_calculation(df):
     weekday(df)
     
     # Calculate the 20-day Simple Moving Average (SMA)
