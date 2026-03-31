@@ -12,6 +12,13 @@ export default defineConfig(({ mode }) => {
       environment: 'jsdom',
       globals: true,
       setupFiles: './src/test/setup.js',
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'html'],
+        reportsDirectory: '../reports/frontend-coverage',
+        include: ['src/**/*.{js,jsx}'],
+        exclude: ['src/test/**', 'src/main.jsx'],
+      },
     },
   }
 })

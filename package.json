@@ -10,7 +10,10 @@
     "build:frontend": "cd frontend && npm run build",
     "test:backend": "cd backend && python -m pytest tests/ -v",
     "test:frontend": "cd frontend && npx vitest run",
-    "test": "concurrently \"npm run test:backend\" \"npm run test:frontend\""
+    "test": "concurrently \"npm run test:backend\" \"npm run test:frontend\"",
+    "test:backend:report": "cd backend && python -m pytest tests/ -v --html=../reports/backend-test-report/index.html --self-contained-html --cov=services --cov=utils --cov=api --cov-report=html:../reports/backend-coverage --cov-report=term-missing",
+    "test:frontend:report": "cd frontend && npx vitest run --coverage",
+    "test:report": "concurrently \"npm run test:backend:report\" \"npm run test:frontend:report\""
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

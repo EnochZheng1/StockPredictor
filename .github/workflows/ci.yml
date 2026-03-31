@@ -20,11 +20,23 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest httpx
 
-      - name: Run backend tests
+      - name: Run backend tests with coverage
         working-directory: backend
-        run: python -m pytest tests/ -v --tb=short
+        run: |
+          python -m pytest tests/ -v --tb=short \
+            --cov=services --cov=utils --cov=api \
+            --cov-report=term-missing \
+            --cov-report=html:../reports/backend-coverage \
+            --html=../reports/backend-test-report/index.html \
+            --self-contained-html
+
+      - name: Upload backend reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-reports
+          path: reports/
 
   frontend:
     runs-on: ubuntu-latest
@@ -39,9 +51,16 @@ jobs:
         working-directory: frontend
         run: npm ci
 
-      - name: Run tests
+      - name: Run tests with coverage
         working-directory: frontend
-        run: npx vitest run
+        run: npx vitest run --coverage
+
+      - name: Upload frontend reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-reports
+          path: reports/
 
       - name: Build
         working-directory: frontend

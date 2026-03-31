@@ -11,6 +11,9 @@ build/
 venv/
 env/
 
+# Reports
+reports/
+
 # Data
 data.csv
 *.db

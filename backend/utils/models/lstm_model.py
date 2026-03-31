@@ -21,6 +21,12 @@ class LSTMModel(BaseModel, nn.Module):
         self._input_size = None
         self._built = False
 
+    def _set_train_mode(self):
+        nn.Module.train(self, True)
+
+    def _set_eval_mode(self):
+        nn.Module.train(self, False)
+
     def _build(self, input_size):
         self._input_size = input_size
         self.lstm = nn.LSTM(input_size, self.hidden_layer_size, self.num_layers, batch_first=True)
@@ -69,7 +75,7 @@ class LSTMModel(BaseModel, nn.Module):
         loss_fn = nn.MSELoss()
         optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
 
-        nn.Module.train(self)
+        self._set_train_mode()
         for epoch in range(self.epochs):
             optimizer.zero_grad()
             output = self.forward(X_tensor)
@@ -80,7 +86,7 @@ class LSTMModel(BaseModel, nn.Module):
         self._last_X_scaled = X_scaled
 
     def predict(self, X: pd.DataFrame) -> np.ndarray:
-        self.eval()
+        self._set_eval_mode()
         X_values = X.values.astype(np.float32)
         X_scaled = self.scaler.transform(X_values)
 
@@ -99,7 +105,7 @@ class LSTMModel(BaseModel, nn.Module):
         return self.target_scaler.inverse_transform(predictions).flatten()
 
     def predict_future(self, last_known_data: pd.DataFrame, steps: int = 30) -> list:
-        self.eval()
+        self._set_eval_mode()
         X_values = last_known_data.values.astype(np.float32)
         current_seq = self.scaler.transform(X_values)[-self.sequence_length:]
 
