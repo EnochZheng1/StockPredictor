@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import TickerInput from "../components/TickerInput";
 import ModelSelector from "../components/ModelSelector";
 import PredictionChart from "../components/PredictionChart";
@@ -34,6 +34,7 @@ export default function Dashboard() {
   const [runningModels, setRunningModels] = useState(false);
   const [runningBacktest, setRunningBacktest] = useState(false);
   const [error, setError] = useState(null);
+  const fetchIdRef = useRef(0);
 
   useEffect(() => {
     getAvailableModels()
@@ -46,19 +47,22 @@ export default function Dashboard() {
   }, []);
 
   const handleFetchStock = async (t, p) => {
+    const id = ++fetchIdRef.current;
     setFetchingStock(true);
     setError(null);
     setComparisonResults(null);
     setBacktestData(null);
     try {
       const data = await fetchStockData(t, p);
+      if (id !== fetchIdRef.current) return; // stale request
       setStockData(data);
       setTicker(t);
       setPeriod(p);
     } catch (err) {
+      if (id !== fetchIdRef.current) return;
       setError(err.response?.data?.detail || "Failed to fetch stock data");
     } finally {
-      setFetchingStock(false);
+      if (id === fetchIdRef.current) setFetchingStock(false);
     }
   };
 

@@ -34,7 +34,7 @@ class BacktestResponse:
 def _compute_backtest(predictions: np.ndarray, actual_prices: np.ndarray, dates: List[str]) -> BacktestResult:
     """Run a simple long/flat strategy: buy when predicted next price > current price."""
     n = len(actual_prices)
-    daily_returns = np.diff(actual_prices) / actual_prices[:-1]
+    daily_returns = np.diff(actual_prices) / np.where(actual_prices[:-1] == 0, 1e-10, actual_prices[:-1])
 
     # Strategy: position[i] = 1 if predicted[i+1] > predicted[i], else 0 (flat)
     positions = np.zeros(n - 1)

@@ -44,5 +44,7 @@ class XGBoostModel(BaseModel):
         for _ in range(steps):
             pred = self.model.predict(current)[0]
             predictions.append(float(pred))
+            current = np.roll(current, -1, axis=1)
+            current[0, -1] = pred
 
         return predictions

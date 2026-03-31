@@ -55,7 +55,7 @@ def weighted_average_ensemble(
 ) -> PredictionResult:
     # Weight by inverse RMSE (lower RMSE = higher weight)
     rmses = np.array([r.metrics["rmse"] for r in base_results])
-    weights = 1.0 / rmses
+    weights = 1.0 / (rmses + 1e-10)  # prevent division by zero
     weights = weights / weights.sum()
 
     test_matrix = np.array([r.test_predictions for r in base_results])

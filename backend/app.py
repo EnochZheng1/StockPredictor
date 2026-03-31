@@ -71,9 +71,12 @@ async def websocket_price(websocket: WebSocket, ticker: str):
                     "previous_close": round(float(info.previous_close), 2) if hasattr(info, "previous_close") else None,
                     "timestamp": time.time(),
                 }
-                if data["price"] and data["previous_close"]:
+                if data["price"] is not None and data["previous_close"] is not None:
                     data["change"] = round(data["price"] - data["previous_close"], 2)
-                    data["change_pct"] = round((data["change"] / data["previous_close"]) * 100, 2)
+                    if data["previous_close"] != 0:
+                        data["change_pct"] = round((data["change"] / data["previous_close"]) * 100, 2)
+                    else:
+                        data["change_pct"] = 0.0
                 await websocket.send_text(json.dumps(data))
             except Exception as e:
                 await websocket.send_text(json.dumps({"error": str(e)}))

@@ -35,7 +35,10 @@ class PolynomialRegressionModel(BaseModel):
         current = last_known_data.iloc[-1:].values.copy()
 
         for _ in range(steps):
-            pred = self.pipeline.predict(current)[0]
-            predictions.append(float(pred))
+            pred = self.pipeline.predict(np.clip(current, -1e6, 1e6))[0]
+            pred = float(np.clip(pred, -1e10, 1e10))
+            predictions.append(pred)
+            current = np.roll(current, -1, axis=1)
+            current[0, -1] = pred
 
         return predictions

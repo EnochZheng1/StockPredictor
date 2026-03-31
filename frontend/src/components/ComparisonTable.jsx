@@ -25,9 +25,9 @@ export default function ComparisonTable({ summary, bestModel }) {
                   <span className="best-badge">Best</span>
                 )}
               </td>
-              <td>{row.rmse.toFixed(4)}</td>
-              <td>{row.mae.toFixed(4)}</td>
-              <td>{row.r2.toFixed(4)}</td>
+              <td>{Number(row.rmse ?? 0).toFixed(4)}</td>
+              <td>{Number(row.mae ?? 0).toFixed(4)}</td>
+              <td>{Number(row.r2 ?? 0).toFixed(4)}</td>
             </tr>
           ))}
         </tbody>

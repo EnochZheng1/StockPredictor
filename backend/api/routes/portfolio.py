@@ -48,8 +48,8 @@ def portfolio_compare(request: PortfolioRequest):
                 model_display_name = model.get_name()
 
                 current = float(data.y_test.iloc[-1])
-                predicted = float(future[-1]) if future else current
-                change = ((predicted - current) / current) * 100
+                predicted = float(future[-1]) if future and len(future) > 0 else current
+                change = ((predicted - current) / current) * 100 if current != 0 else 0.0
 
                 results.append(TickerResult(
                     ticker=ticker.upper(),

@@ -25,7 +25,8 @@ class LinearRegressionModel(BaseModel):
         for _ in range(steps):
             pred = self.model.predict(current)[0]
             predictions.append(float(pred))
-            # Shift features forward: use prediction as a simple proxy
-            current = current.copy()
+            # Feed prediction back as first feature and shift others
+            current = np.roll(current, -1, axis=1)
+            current[0, -1] = pred
 
         return predictions

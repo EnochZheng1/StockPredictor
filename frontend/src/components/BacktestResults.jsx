@@ -13,7 +13,7 @@ import {
 const COLORS = ["#2563eb", "#dc2626", "#16a34a", "#9333ea", "#ea580c", "#0891b2", "#be185d"];
 
 export default function BacktestResults({ backtestData }) {
-  if (!backtestData || backtestData.results.length === 0) return null;
+  if (!backtestData?.results?.length) return null;
 
   // Build equity curve chart data
   const first = backtestData.results[0];
