@@ -10,6 +10,9 @@ build/
 .venv/
 venv/
 env/
+.coverage
+.pytest_cache/
+.htmlcov/
 
 # Reports
 reports/

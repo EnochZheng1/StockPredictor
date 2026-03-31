@@ -22,6 +22,7 @@ def predict(request: PredictionRequest):
             test_dates=result.test_dates,
             future_predictions=result.future_predictions,
             future_dates=result.future_dates,
+            feature_importance=result.feature_importance,
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

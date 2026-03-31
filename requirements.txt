@@ -14,9 +14,6 @@ prophet>=1.1
 # Technical analysis
 TA-Lib>=0.4
 
-# Visualization
-plotly>=5.0
-
 # Backend API
 fastapi>=0.100
 uvicorn[standard]>=0.30

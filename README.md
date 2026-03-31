@@ -89,9 +89,13 @@ npm run test:frontend     # vitest (14 tests)
 |--------|----------|-------------|
 | GET | `/api/stocks/{ticker}` | Historical data + technical indicators |
 | GET | `/api/models` | Available models, ensemble methods, tunable params |
+| GET | `/api/sentiment/{ticker}` | News sentiment analysis (VADER) |
+| GET | `/api/history` | Prediction history (optional `?ticker=` filter) |
 | POST | `/api/predict` | Single model prediction |
 | POST | `/api/compare` | Multi-model comparison with optional ensembles |
 | POST | `/api/backtest` | Run backtest on selected models |
+| POST | `/api/portfolio` | Compare predictions across multiple tickers |
+| WS | `/ws/price/{ticker}` | Live price updates (WebSocket, 10s interval) |
 
 Interactive API docs: `http://localhost:4289/docs`
 

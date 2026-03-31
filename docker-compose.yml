@@ -7,6 +7,12 @@ services:
       - "4289:4289"
     environment:
       - FRONTEND_URL=http://localhost:4290
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:4289/')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
 
   frontend:
     build:
@@ -15,4 +21,5 @@ services:
     ports:
       - "4290:4290"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
